@@ -5,6 +5,7 @@
   "_comment4": "NAME=windows-server-2019-standard-x64-eval    WINDOWS_VERSION=2019 VIRTIO_WIN_ISO_DIR=./packer_cache/virtio-win ISO_URL=https://software-download.microsoft.com/download/pr/17763.737.190906-2324.rs5_release_svc_refresh_SERVER_EVAL_x64FRE_en-us_1.iso                                                          PACKER_IMAGES_OUTPUT_DIR=/var/tmp/ TMPDIR=/var/tmp/ packer build -only=qemu windows.json",
   "builders": [
     {
+      "format": "raw",
       "accelerator": "{{ user `accelerator` }}",
       "communicator": "winrm",
       "cpus": "{{ user `cpus` }}",
@@ -34,10 +35,8 @@
       "winrm_use_ssl": "true",
       "winrm_username": "{{ user `winrm_username` }}",
       "qemuargs": [
-        [
-          "--cpu",
-          "host-passthrough"
-        ]
+        "--cpu",
+        "host-passthrough"
       ]
     }
   ],

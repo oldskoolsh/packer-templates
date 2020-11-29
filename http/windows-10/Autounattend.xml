@@ -2,61 +2,68 @@
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
     <servicing/>
     <settings pass="windowsPE">
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="neutral" name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
+        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" language="neutral" name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
             <DiskConfiguration>
                 <Disk wcm:action="add">
+                    <DiskID>0</DiskID>
+                    <WillWipeDisk>true</WillWipeDisk>
                     <CreatePartitions>
-                        <CreatePartition wcm:action="add">
-                            <Order>2</Order>
-                            <Size>100</Size>
-                            <Type>EFI</Type>
-                        </CreatePartition>
+                        <!-- Windows RE Tools partition -->
                         <CreatePartition wcm:action="add">
                             <Order>1</Order>
-                            <Size>500</Size>
                             <Type>Primary</Type>
+                            <Size>300</Size>
                         </CreatePartition>
+                        <!-- System partition (ESP) -->
+                        <CreatePartition wcm:action="add">
+                            <Order>2</Order>
+                            <Type>EFI</Type>
+                            <Size>100</Size>
+                        </CreatePartition>
+                        <!-- Microsoft reserved partition (MSR) -->
                         <CreatePartition wcm:action="add">
                             <Order>3</Order>
-                            <Size>16</Size>
                             <Type>MSR</Type>
+                            <Size>128</Size>
                         </CreatePartition>
+                        <!-- Windows partition -->
                         <CreatePartition wcm:action="add">
                             <Order>4</Order>
-                            <Extend>true</Extend>
                             <Type>Primary</Type>
+                            <Extend>true</Extend>
                         </CreatePartition>
                     </CreatePartitions>
                     <ModifyPartitions>
+                        <!-- Windows RE Tools partition -->
                         <ModifyPartition wcm:action="add">
                             <Order>1</Order>
-                            <Label>WinRE</Label>
+                            <PartitionID>1</PartitionID>
+                            <Label>WINRE</Label>
                             <Format>NTFS</Format>
                             <TypeID>DE94BBA4-06D1-4D40-A16A-BFD50179D6AC</TypeID>
-                            <PartitionID>1</PartitionID>
                         </ModifyPartition>
+                        <!-- System partition (ESP) -->
                         <ModifyPartition wcm:action="add">
-                            <PartitionID>2</PartitionID>
                             <Order>2</Order>
-                            <Format>FAT32</Format>
+                            <PartitionID>2</PartitionID>
                             <Label>System</Label>
+                            <Format>FAT32</Format>
                         </ModifyPartition>
+                        <!-- MSR partition does not need to be modified -->
                         <ModifyPartition wcm:action="add">
                             <Order>3</Order>
                             <PartitionID>3</PartitionID>
                         </ModifyPartition>
+                        <!-- Windows partition -->
                         <ModifyPartition wcm:action="add">
-                            <Format>NTFS</Format>
-                            <Label>Windows</Label>
-                            <Letter>C</Letter>
                             <Order>4</Order>
                             <PartitionID>4</PartitionID>
+                            <Label>OS</Label>
+                            <Letter>C</Letter>
+                            <Format>NTFS</Format>
                         </ModifyPartition>
                     </ModifyPartitions>
-                    <WillWipeDisk>true</WillWipeDisk>
-                    <DiskID>0</DiskID>
                 </Disk>
-                <WillShowUI>OnError</WillShowUI>
             </DiskConfiguration>
             <UserData>
                 <AcceptEula>true</AcceptEula>
@@ -85,7 +92,7 @@
                 <OSImage>
                     <InstallTo>
                         <DiskID>0</DiskID>
-                        <PartitionID>1</PartitionID>
+                        <PartitionID>4</PartitionID>
                     </InstallTo>
                     <WillShowUI>OnError</WillShowUI>
                     <InstallToAvailablePartition>false</InstallToAvailablePartition>
@@ -98,7 +105,7 @@
                 </OSImage>
             </ImageInstall>
         </component>
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="neutral" name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
+        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" language="neutral" name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
             <SetupUILanguage>
                 <UILanguage>en-US</UILanguage>
             </SetupUILanguage>
@@ -108,7 +115,7 @@
             <UILanguageFallback>en-US</UILanguageFallback>
             <UserLocale>en-US</UserLocale>
         </component>
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="neutral" name="Microsoft-Windows-PnpCustomizationsWinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
+        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" language="neutral" name="Microsoft-Windows-PnpCustomizationsWinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
             <DriverPaths>
                 <PathAndCredentials wcm:action="add" wcm:keyValue="1">
                     <Path>E:\virtio-win\NetKVM\w10\amd64\</Path>
@@ -125,13 +132,13 @@
         </component>
     </settings>
     <settings pass="oobeSystem">
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="neutral" name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
+        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" language="neutral" name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
             <InputLocale>en-US</InputLocale>
             <SystemLocale>en-US</SystemLocale>
             <UILanguage>en-US</UILanguage>
             <UserLocale>en-US</UserLocale>
         </component>
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="neutral" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
+        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" language="neutral" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
             <UserAccounts>
                 <AdministratorPassword>
                     <Value>vagrant</Value>
@@ -181,7 +188,8 @@
                     <RequiresUserInput>true</RequiresUserInput>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>cmd.exe /c powershell -Command "Invoke-Expression ((New-Object System.Net.Webclient).DownloadString('https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1'))"</CommandLine>
+                    <CommandLine>cmd.exe /c powershell -Command "Invoke-Expression ((New-Object System.Net.Webclient).DownloadString('https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1'))"
+                    </CommandLine>
                     <Description>Enable WinRM</Description>
                     <Order>3</Order>
                     <RequiresUserInput>true</RequiresUserInput>
@@ -206,17 +214,17 @@
             <TimeZone>UTC</TimeZone>
             <RegisteredOwner/>
         </component>
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="neutral" name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
+        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" language="neutral" name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
             <SkipAutoActivation>true</SkipAutoActivation>
         </component>
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="neutral" name="Microsoft-Windows-ServerManager-SvrMgrNc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
+        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" language="neutral" name="Microsoft-Windows-ServerManager-SvrMgrNc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
             <DoNotOpenServerManagerAtLogon>true</DoNotOpenServerManagerAtLogon>
         </component>
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="neutral" name="Microsoft-Windows-IE-ESC" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
+        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" language="neutral" name="Microsoft-Windows-IE-ESC" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
             <IEHardenAdmin>false</IEHardenAdmin>
             <IEHardenUser>false</IEHardenUser>
         </component>
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="neutral" name="Microsoft-Windows-IE-InternetExplorer" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
+        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" language="neutral" name="Microsoft-Windows-IE-InternetExplorer" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
             <DisableAccelerators>true</DisableAccelerators>
             <DisableOOBAccelerators>true</DisableOOBAccelerators>
             <SuggestedSitesEnabled>false</SuggestedSitesEnabled>
@@ -237,13 +245,14 @@
                 </Scope>
             </SearchScopes>
         </component>
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="neutral" name="Microsoft-Windows-TerminalServices-LocalSessionManager" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
+        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" language="neutral" name="Microsoft-Windows-TerminalServices-LocalSessionManager" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
             <fDenyTSConnections>false</fDenyTSConnections>
         </component>
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="neutral" name="Microsoft-Windows-TerminalServices-RDP-WinStationExtensions" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
+        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" language="neutral" name="Microsoft-Windows-TerminalServices-RDP-WinStationExtensions" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35"
+                   versionScope="nonSxS">
             <UserAuthentication>0</UserAuthentication>
         </component>
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="neutral" name="Networking-MPSSVC-Svc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
+        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" language="neutral" name="Networking-MPSSVC-Svc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
             <FirewallGroups>
                 <FirewallGroup wcm:action="add" wcm:keyValue="RemoteDesktop">
                     <Active>true</Active>
@@ -252,7 +261,7 @@
                 </FirewallGroup>
             </FirewallGroups>
         </component>
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="neutral" name="Microsoft-Windows-OutOfBoxExperience" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
+        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" language="neutral" name="Microsoft-Windows-OutOfBoxExperience" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
             <DoNotOpenInitialConfigurationTasksAtLogon>true</DoNotOpenInitialConfigurationTasksAtLogon>
         </component>
     </settings>

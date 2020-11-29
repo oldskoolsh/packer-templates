@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -eu -o pipefail
+set -x
 
 # Packer cache directory (where to store the iso images)
 export PACKER_CACHE_DIR=${PACKER_CACHE_DIR:-/var/tmp/packer_cache}

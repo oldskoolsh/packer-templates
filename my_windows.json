@@ -83,7 +83,7 @@
     "packer_images_output_dir": "{{ env `PACKER_IMAGES_OUTPUT_DIR` }}",
     "virtio_win_iso_dir": "{{ env `VIRTIO_WIN_ISO_DIR` }}",
     "windows_version": "{{ env `WINDOWS_VERSION` }}",
-    "winrm_password": "pass",
-    "winrm_username": "user"
+    "winrm_password": "vagrant",
+    "winrm_username": "vagrant"
   }
 }

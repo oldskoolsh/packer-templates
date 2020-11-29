@@ -39,6 +39,10 @@
           "-cpu",
           "host"
         ]
+      ],
+      "boot_wait": "3s",
+      "boot_command": [
+        "<wait><spacebar>"
       ]
     }
   ],

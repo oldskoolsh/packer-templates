@@ -7,23 +7,54 @@
                 <Disk wcm:action="add">
                     <CreatePartitions>
                         <CreatePartition wcm:action="add">
+                            <Order>2</Order>
+                            <Size>100</Size>
+                            <Type>EFI</Type>
+                        </CreatePartition>
+                        <CreatePartition wcm:action="add">
                             <Order>1</Order>
+                            <Size>500</Size>
                             <Type>Primary</Type>
+                        </CreatePartition>
+                        <CreatePartition wcm:action="add">
+                            <Order>3</Order>
+                            <Size>16</Size>
+                            <Type>MSR</Type>
+                        </CreatePartition>
+                        <CreatePartition wcm:action="add">
+                            <Order>4</Order>
                             <Extend>true</Extend>
+                            <Type>Primary</Type>
                         </CreatePartition>
                     </CreatePartitions>
                     <ModifyPartitions>
                         <ModifyPartition wcm:action="add">
-                            <Extend>false</Extend>
-                            <Format>NTFS</Format>
-                            <Letter>C</Letter>
                             <Order>1</Order>
+                            <Label>WinRE</Label>
+                            <Format>NTFS</Format>
+                            <TypeID>DE94BBA4-06D1-4D40-A16A-BFD50179D6AC</TypeID>
                             <PartitionID>1</PartitionID>
-                            <Label>Windows 10</Label>
+                        </ModifyPartition>
+                        <ModifyPartition wcm:action="add">
+                            <PartitionID>2</PartitionID>
+                            <Order>2</Order>
+                            <Format>FAT32</Format>
+                            <Label>System</Label>
+                        </ModifyPartition>
+                        <ModifyPartition wcm:action="add">
+                            <Order>3</Order>
+                            <PartitionID>3</PartitionID>
+                        </ModifyPartition>
+                        <ModifyPartition wcm:action="add">
+                            <Format>NTFS</Format>
+                            <Label>Windows</Label>
+                            <Letter>C</Letter>
+                            <Order>4</Order>
+                            <PartitionID>4</PartitionID>
                         </ModifyPartition>
                     </ModifyPartitions>
-                    <DiskID>0</DiskID>
                     <WillWipeDisk>true</WillWipeDisk>
+                    <DiskID>0</DiskID>
                 </Disk>
                 <WillShowUI>OnError</WillShowUI>
             </DiskConfiguration>

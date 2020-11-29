@@ -32,6 +32,10 @@
       "winrm_username": "{{ user `winrm_username` }}",
       "qemuargs": [
         [
+          "-pflash",
+          "/usr/share/ovmf/OVMF.fd"
+        ],
+        [
           "-cpu",
           "host"
         ]

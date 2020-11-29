@@ -188,7 +188,7 @@ cmdline() {
 
 packer_build() {
   if [[ ! -f "${PACKER_IMAGES_OUTPUT_DIR}/${BUILD}.box" ]]; then
-    ${PACKER_BINARY} build -only="${PACKER_BUILDER_TYPE}" -color=false -var "headless=${HEADLESS}" -var "accelerator=${ACCELERATOR}" "${PACKER_FILE}" 2>&1 | tee "${LOGDIR}/${BUILD}-packer.log"
+    ${PACKER_BINARY} build -only="${PACKER_BUILDER_TYPE}" -color=true -var "headless=${HEADLESS}" -var "accelerator=${ACCELERATOR}" "${PACKER_FILE}" 2>&1 | tee "${LOGDIR}/${BUILD}-packer.log"
     ln -rfs "${PACKER_CACHE_DIR}/$(echo -n "${ISO_CHECKSUM}" | sha1sum | awk '{ print $1 }').iso" "${PACKER_CACHE_DIR}/${NAME}.iso"
   else
     echo -e "\n* File ${PACKER_IMAGES_OUTPUT_DIR}/${BUILD}.box already exists. Skipping....\n";

@@ -29,78 +29,19 @@
       "winrm_insecure": "true",
       "winrm_password": "{{ user `winrm_password` }}",
       "winrm_use_ssl": "true",
-      "winrm_username": "{{ user `winrm_username` }}"
-    },
-    {
-      "communicator": "winrm",
-      "cpus": "{{ user `cpus` }}",
-      "disk_size": "{{ user `disk_size` }}",
-      "floppy_files": [
-        "{{ user `autounattend` }}",
-        "scripts/win-common/fixnetwork.ps1",
-        "scripts/win-common/unattend.xml",
-        "scripts/win-common/sysprep.bat"
-      ],
-      "guest_additions_mode": "attach",
-      "guest_os_type": "Windows{{ user `windows_version` }}_64",
-      "hard_drive_interface": "sata",
-      "headless": "{{ user `headless` }}",
-      "iso_checksum": "file:{{ user `iso_checksum` }}",
-      "iso_urls": [
-        "{{ user `iso_url` }}"
-      ],
-      "memory": "{{ user `memory` }}",
-      "output_directory": "{{ user `name` }}-virtualbox-iso",
-      "shutdown_command": "A:\\sysprep.bat",
-      "shutdown_timeout": "15m",
-      "type": "virtualbox-iso",
-      "vboxmanage": [
+      "winrm_username": "{{ user `winrm_username` }}",
+      "qemuargs": [
         [
-          "modifyvm",
-          "{{ .Name }}",
-          "--graphicscontroller",
-          "vboxsvga"
-        ],
-        [
-          "modifyvm",
-          "{{ .Name }}",
-          "--audiocontroller",
-          "ac97"
+          "-cpu",
+          "host"
         ]
-      ],
-      "vm_name": "{{ user `name` }}",
-      "winrm_insecure": "true",
-      "winrm_password": "{{ user `winrm_password` }}",
-      "winrm_use_ssl": "true",
-      "winrm_username": "{{ user `winrm_username` }}"
+      ]
     }
-  ],
-  "post-processors": [
-    [
-      {
-        "compression_level": 9,
-        "output": "{{ user `packer_images_output_dir` }}/{{ user `name` }}-{{ .Provider }}.box",
-        "type": "vagrant",
-        "vagrantfile_template": "Vagrantfile-windows.template"
-      }
-    ]
   ],
   "provisioners": [
     {
       "duration": "1m",
       "type": "sleep"
-    },
-    {
-      "inline": [
-        "$cert = (Get-AuthenticodeSignature 'E:\\VBoxWindowsAdditions.exe').SignerCertificate; [System.IO.File]::WriteAllBytes('C:\\vbox.cer', $cert.Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Cert));",
-        "certutil.exe -f -addstore TrustedPublisher C:\\vbox.cer",
-        "E:\\VBoxWindowsAdditions.exe /S",
-        "del C:\\vbox.cer"
-      ],
-      "only": [
-        "virtualbox-iso"
-      ],
-      "type": "powershell"
     },
     {
       "command": "ansible-playbook --connection=winrm --extra-vars='packer_build_name={{ user `name` }} ansible_password='{{ user `winrm_password` }}' ansible_winrm_server_cert_validation=ignore ansible_winrm_read_timeout_sec=100' -i 127.0.0.1, ansible/site.yml",
@@ -124,7 +65,7 @@
         "udefrag --optimize --repeat --suppress-progress-indicator %SystemDrive%",
         "\"%PROGRAMFILES(x86)%\\BleachBit\\bleachbit_console.exe\" --clean system.free_disk_space"
       ],
-      "pause_before": "5m",
+      "pause_before": "1m",
       "remote_path": "C:\\script.bat",
       "type": "windows-shell"
     }
@@ -142,7 +83,7 @@
     "packer_images_output_dir": "{{ env `PACKER_IMAGES_OUTPUT_DIR` }}",
     "virtio_win_iso_dir": "{{ env `VIRTIO_WIN_ISO_DIR` }}",
     "windows_version": "{{ env `WINDOWS_VERSION` }}",
-    "winrm_password": "vagrant",
-    "winrm_username": "vagrant"
+    "winrm_password": "pass",
+    "winrm_username": "user"
   }
 }

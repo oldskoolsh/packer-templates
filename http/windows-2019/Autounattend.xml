@@ -24,52 +24,66 @@
         <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" language="neutral" name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
             <DiskConfiguration>
                 <Disk wcm:action="add">
+                    <DiskID>0</DiskID>
+                    <WillWipeDisk>true</WillWipeDisk>
                     <CreatePartitions>
+                        <!-- Windows RE Tools partition -->
                         <CreatePartition wcm:action="add">
-                            <Type>Primary</Type>
                             <Order>1</Order>
-                            <Size>350</Size>
+                            <Type>Primary</Type>
+                            <Size>300</Size>
                         </CreatePartition>
+                        <!-- System partition (ESP) -->
                         <CreatePartition wcm:action="add">
                             <Order>2</Order>
+                            <Type>EFI</Type>
+                            <Size>100</Size>
+                        </CreatePartition>
+                        <!-- Microsoft reserved partition (MSR) -->
+                        <CreatePartition wcm:action="add">
+                            <Order>3</Order>
+                            <Type>MSR</Type>
+                            <Size>128</Size>
+                        </CreatePartition>
+                        <!-- Windows partition -->
+                        <CreatePartition wcm:action="add">
+                            <Order>4</Order>
                             <Type>Primary</Type>
                             <Extend>true</Extend>
                         </CreatePartition>
                     </CreatePartitions>
                     <ModifyPartitions>
+                        <!-- Windows RE Tools partition -->
                         <ModifyPartition wcm:action="add">
-                            <Active>true</Active>
-                            <Format>NTFS</Format>
-                            <Label>boot</Label>
                             <Order>1</Order>
                             <PartitionID>1</PartitionID>
-                        </ModifyPartition>
-                        <ModifyPartition wcm:action="add">
+                            <Label>WINRE</Label>
                             <Format>NTFS</Format>
-                            <Label>Windows 2019</Label>
-                            <Letter>C</Letter>
+                            <TypeID>DE94BBA4-06D1-4D40-A16A-BFD50179D6AC</TypeID>
+                        </ModifyPartition>
+                        <!-- System partition (ESP) -->
+                        <ModifyPartition wcm:action="add">
                             <Order>2</Order>
                             <PartitionID>2</PartitionID>
+                            <Label>System</Label>
+                            <Format>FAT32</Format>
+                        </ModifyPartition>
+                        <!-- MSR partition does not need to be modified -->
+                        <ModifyPartition wcm:action="add">
+                            <Order>3</Order>
+                            <PartitionID>3</PartitionID>
+                        </ModifyPartition>
+                        <!-- Windows partition -->
+                        <ModifyPartition wcm:action="add">
+                            <Order>4</Order>
+                            <PartitionID>4</PartitionID>
+                            <Label>OS</Label>
+                            <Letter>C</Letter>
+                            <Format>NTFS</Format>
                         </ModifyPartition>
                     </ModifyPartitions>
-                    <DiskID>0</DiskID>
-                    <WillWipeDisk>true</WillWipeDisk>
                 </Disk>
             </DiskConfiguration>
-            <ImageInstall>
-                <OSImage>
-                    <InstallFrom>
-                        <MetaData wcm:action="add">
-                            <Key>/IMAGE/NAME</Key>
-                            <Value>Windows Server 2019 SERVERSTANDARD</Value>
-                        </MetaData>
-                    </InstallFrom>
-                    <InstallTo>
-                        <DiskID>0</DiskID>
-                        <PartitionID>2</PartitionID>
-                    </InstallTo>
-                </OSImage>
-            </ImageInstall>
             <UserData>
                 <!-- Product Key from https://www.microsoft.com/en-us/evalcenter/ -->
                 <ProductKey>
@@ -82,6 +96,22 @@
                 <FullName>Vagrant</FullName>
                 <Organization>Vagrant</Organization>
             </UserData>
+            <ImageInstall>
+                <OSImage>
+                    <InstallTo>
+                        <DiskID>0</DiskID>
+                        <PartitionID>4</PartitionID>
+                    </InstallTo>
+                    <WillShowUI>OnError</WillShowUI>
+                    <InstallToAvailablePartition>false</InstallToAvailablePartition>
+                    <InstallFrom>
+                        <MetaData wcm:action="add">
+                            <Key>/IMAGE/NAME</Key>
+                            <Value>Windows Server 2019 SERVERSTANDARD</Value>
+                        </MetaData>
+                    </InstallFrom>
+                </OSImage>
+            </ImageInstall>
         </component>
     </settings>
     <settings pass="specialize">

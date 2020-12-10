@@ -1,5 +1,10 @@
 {
   "_comment1": "NAME=my_windows-10-enterprise-x64-eval WINDOWS_VERSION=10 VIRTIO_WIN_ISO_DIR=./packer_cache/virtio-win ISO_URL=https://software-download.microsoft.com/download/pr/19041.264.200511-0456.vb_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso PACKER_IMAGES_OUTPUT_DIR=/var/tmp/ TMPDIR=/var/tmp/ packer build -only=qemu my_windows.json",
+  "_comment2": "// @TODO: 4 cores, not 4 sockets...",
+  "_comment3": "// ideally 3 cores, with 1 socket, 3 cores, and 2 threads.",
+  "_comment4": "// do NOT install vagrant public key!",
+  "_comment5": "// @TODO: agent like GCP Windows (Cloud-init?)",
+  "_comment6": "// @TODO: rng generator...",
   "builders": [
     {
       "accelerator": "{{ user `accelerator` }}",
